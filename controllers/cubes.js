@@ -53,5 +53,11 @@ module.exports = {
                 })
                 .catch(e => console.log(e));
         }
+    },
+
+    getEditForm: (req, res) => {
+        const { id } = req.params;
+
+        res.render('edit-cube');
     }
 };
