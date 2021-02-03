@@ -1,5 +1,4 @@
-const Cube = require('../models/Cube');
-const Accessory = require('../models/Accessory');
+const cubeService = require('../services/cubeService');
 
 module.exports = {
     getCreateForm: (req, res) => {
@@ -7,7 +6,7 @@ module.exports = {
     },
 
     createCube: (req, res) => {
-        new Cube(req.body).save()
+        cubeService.create(req.body)
             .then(() => {
                 res.redirect('/');
             })
@@ -16,13 +15,12 @@ module.exports = {
 
     getDetails: (req, res) => {
         const { id } = req.params;
-        Cube.findById(id)
-            .populate('accessories')
-            .lean()
+
+        cubeService.getOneWithAccessories(id)
             .then((cube) => {
                 res.render('details', { ...cube });
             })
-            .catch(e => console.log(e));
+            .catch(e => console.log(e))
     },
 
     getCubes: (req, res) => {
@@ -31,12 +29,7 @@ module.exports = {
                 res.redirect('/');
             }
 
-            const { search, from, to } = req.query;
-
-            Cube.find({
-                name: search ? new RegExp(search, 'gi') : /^.+$/g,
-                difficulty: { $gte: from || 0, $lte: to || 6 }
-            }).lean()
+            cubeService.getAll(req.query)
                 .then((cubes) => {
                     console.log(cubes);
                     if (cubes.length > 0) {
@@ -47,7 +40,7 @@ module.exports = {
                 })
                 .catch(e => console.log(e));
         } else {
-            Cube.find({}).lean()
+            cubeService.getAll()
                 .then((cubes) => {
                     res.render('index', { cubes });
                 })
@@ -55,9 +48,53 @@ module.exports = {
         }
     },
 
-    getEditForm: (req, res) => {
+    getEditForm: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const cube = await cubeService.getOne(id);
+            const defaultValue = {
+                1: '1 - Very Easy',
+                2: '2 - Easy',
+                3: '3 - Medium(Standard 3x3)',
+                4: '4 - Intermediate',
+                5: '5 - Expert',
+                6: '6 - Hardcore'
+            }[cube.difficulty];
+
+            res.render('edit-cube', { ...cube, defaultValue });
+        } catch (err) {
+            console.log(err);
+        }
+    },
+
+    editCube: (req, res) => {
         const { id } = req.params;
 
-        res.render('edit-cube');
+        cubeService.edit(id, req.body)
+            .then(() => res.redirect(`/details/${id}`))
+            .catch(e => console.log(e));
+    },
+
+    getDeleteForm: async (req, res) => {
+        const { id } = req.params;
+        const cube = await cubeService.getOne(id);
+        const defaultValue = {
+            1: '1 - Very Easy',
+            2: '2 - Easy',
+            3: '3 - Medium(Standard 3x3)',
+            4: '4 - Intermediate',
+            5: '5 - Expert',
+            6: '6 - Hardcore'
+        }[cube.difficulty];
+
+        res.render('delete-cube', { ...cube, defaultValue });
+    },
+
+    deleteCube: (req, res) => {
+        const { id } = req.params;
+
+        cubeService.delete(id)
+            .then(() => res.redirect('/'))
+            .catch(e => console.log(e));
     }
 };
