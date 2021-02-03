@@ -70,7 +70,7 @@ module.exports = {
     editCube: (req, res) => {
         const { id } = req.params;
 
-        cubeService.edit(id, req.body)
+        cubeService.update(id, req.body)
             .then(() => res.redirect(`/details/${id}`))
             .catch(e => console.log(e));
     },

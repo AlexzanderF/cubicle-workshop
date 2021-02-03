@@ -11,9 +11,9 @@ module.exports = {
             .lean();
     },
 
-    getAll: (query) => {
-        if (query) {
-            const { search, from, to } = query;
+    getAll: (queryParams) => {
+        if (queryParams) {
+            const { search, from, to } = queryParams;
 
             return Cube.find({
                 name: search ? new RegExp(search, 'gi') : /^.+$/g,
@@ -28,11 +28,11 @@ module.exports = {
         return new Cube(data).save();
     },
 
-    edit: (id, data) => {
+    update: (id, data) => {
         return Cube.updateOne({ _id: id }, data);
     },
 
     delete: (id) => {
         return Cube.deleteOne({ _id: id });
-    }
+    },
 }

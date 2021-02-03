@@ -1,5 +1,7 @@
 const Accessory = require('../models/Accessory');
 const Cube = require('../models/Cube');
+const accessoryService = require('../services/accessoryService');
+const cubeService = require('../services/cubeService');
 
 module.exports = {
     getCreateForm: (req, res) => {
@@ -7,7 +9,7 @@ module.exports = {
     },
 
     createAccessory: (req, res) => {
-        new Accessory(req.body).save()
+        accessoryService.create(req.body)
             .then(() => {
                 res.redirect('/');
             })
@@ -18,9 +20,9 @@ module.exports = {
         const { id } = req.params;
         try {
             const cube = await Cube.findById(id).lean();
-            const accessories = await Accessory.find({
+            const accessories = await accessoryService.getByQuery({
                 cubes: { $nin: cube._id }
-            }).lean();
+            });
 
             res.render('attach-accessory', { cube, accessories });
         } catch (err) {
@@ -33,11 +35,11 @@ module.exports = {
         try {
             const { id } = req.params;
             const { accessory } = req.body;
-            const accessoryObj = (await Accessory.find({ name: accessory }))[0];
+            const accessoryObj = (await accessoryService.getByQuery({ name: accessory }))[0];
 
             await accessoryObj.update({ $push: { 'cubes': id } });
 
-            Cube.findByIdAndUpdate(id, { $push: { 'accessories': accessoryObj._id } })
+            cubeService.update(id, { $push: { 'accessories': accessoryObj._id } })
                 .then((cube) => {
                     console.log(cube);
                     res.redirect('/');
