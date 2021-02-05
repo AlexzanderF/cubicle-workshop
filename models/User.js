@@ -4,9 +4,14 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema({
     username: { type: String, required: true },
-    password: { type: String, required: true }
+    password: { type: String, required: true, minlength: 6 }
 });
 
-const User = mongoose.model('Cube', userSchema);
+userSchema.pre('save', (next) => {
+
+    next();
+});
+
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;
