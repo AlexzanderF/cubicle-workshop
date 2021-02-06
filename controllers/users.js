@@ -10,7 +10,12 @@ module.exports = {
     },
 
     loginUser: (req, res) => {
-
+        userService.login(req.body)
+            .then((token) => {
+                res.cookie('USER_AUTH', token);
+                res.redirect('/');
+            })
+            .catch(e => { res.render('login', { error: e.message }); console.log(e); });
     },
 
     registerUser: (req, res) => {
@@ -18,6 +23,6 @@ module.exports = {
             .then(() => {
                 res.redirect('/login');
             })
-            .catch(e => { res.render('register', { error: e }); console.log(e); });
+            .catch(e => { res.render('register', { error: e.message }); console.log(e); });
     }
 };
