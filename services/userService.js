@@ -30,7 +30,7 @@ module.exports = {
             const match = await bcrypt.compare(password, user.password);
             if (!match) throw new Error('Invalid password!');
 
-            const token = jwt.sign({ id: user._id }, 'verySecretSecret');
+            const token = jwt.sign({ id: user._id, username: user.username }, 'verySecretSecret');
 
             return token;
         } catch (error) {

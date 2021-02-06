@@ -24,5 +24,10 @@ module.exports = {
                 res.redirect('/login');
             })
             .catch(e => { res.render('register', { error: e.message }); console.log(e); });
+    },
+
+    logout: (req, res) => {
+        res.clearCookie('USER_AUTH');
+        res.redirect('/');
     }
 };

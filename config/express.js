@@ -1,6 +1,7 @@
 const express = require('express');
 const handlebars = require('express-handlebars');
 const cookieParser = require('cookie-parser');
+// const auth = require('../middlewares/auth');
 
 module.exports = (app) => {
     app.engine('hbs', handlebars({
