@@ -6,7 +6,7 @@ module.exports = {
     },
 
     createCube: (req, res) => {
-        cubeService.create(req.body)
+        cubeService.create({ ...req.body, creatorId: req.user.id })
             .then(() => {
                 res.redirect('/');
             })
@@ -15,10 +15,14 @@ module.exports = {
 
     getDetails: (req, res) => {
         const { id } = req.params;
-
         cubeService.getOneWithAccessories(id)
             .then((cube) => {
-                res.render('details', { ...cube });
+                const { user } = req;
+                if (user && user.id === cube.creatorId.toString()) {
+                    res.render('details', { ...cube, user });
+                } else {
+                    res.render('details', { ...cube, });
+                }
             })
             .catch(e => console.log(e))
     },
