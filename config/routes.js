@@ -2,10 +2,12 @@ const cubesController = require('../controllers/cubes');
 const accessoriesController = require('../controllers/accessories');
 const usersController = require('../controllers/users');
 const auth = require('../middlewares/auth');
+// route protection middlewares
 const isAuthenticated = require('../middlewares/isAuthenticated');
 const isGuest = require('../middlewares/isGuest');
 
 module.exports = (app) => {
+    // middleware for handling JWT and auth functionality
     app.use(auth());
 
     app.get('/', cubesController.getCubes);
