@@ -6,12 +6,13 @@ module.exports = function () {
             try {
                 const decodedToken = jwt.verify(req.cookies['USER_AUTH'], 'verySecretSecret');
                 req.user = decodedToken;
+                // need to set user in the res.locals object in order to be used by every view
+                res.locals.user = decodedToken;
             } catch (error) {
                 console.log(error);
                 res.clearCookie('USER_AUTH');
             }
         }
-
         next();
     }
 }

@@ -17,9 +17,9 @@ module.exports = {
         const { id } = req.params;
         cubeService.getOneWithAccessories(id)
             .then((cube) => {
-                const { user } = req;
+                const { user } = res.locals;
                 if (user && user.id === cube.creatorId.toString()) {
-                    res.render('details', { ...cube, user });
+                    res.render('details', { ...cube, isCreator: true });
                 } else {
                     res.render('details', { ...cube, });
                 }
