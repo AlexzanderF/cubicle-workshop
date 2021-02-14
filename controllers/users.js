@@ -17,8 +17,8 @@ module.exports = {
                 res.redirect('/');
             })
             .catch(e => {
+                console.error(e);
                 res.render('login', { error: e.message, ...req.body });
-                console.log(e);
             });
     },
 
@@ -28,8 +28,8 @@ module.exports = {
                 res.redirect('/login');
             })
             .catch(e => {
+                console.error(e);
                 res.render('register', { error: e.message, ...req.body });
-                console.log(e);
             });
     },
 

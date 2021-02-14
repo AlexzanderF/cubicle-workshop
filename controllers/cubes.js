@@ -5,12 +5,15 @@ module.exports = {
         res.render('create');
     },
 
-    createCube: (req, res) => {
-        cubeService.create({ ...req.body, creatorId: req.user.id })
-            .then(() => {
-                res.redirect('/');
-            })
-            .catch(e => console.log(e));
+    createCube: async (req, res) => {
+        try {
+            const creatorId = req.user.id;
+            await cubeService.create({ ...req.body, creatorId })
+            res.redirect('/');
+        } catch (err) {
+            console.error(err.message);
+            res.render('create', { error: err.message, ...req.body });
+        }
     },
 
     getDetails: (req, res) => {
@@ -67,16 +70,19 @@ module.exports = {
 
             res.render('edit-cube', { ...cube, defaultValue });
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     },
 
-    editCube: (req, res) => {
+    editCube: async (req, res) => {
         const { id } = req.params;
-
-        cubeService.update(id, req.body)
-            .then(() => res.redirect(`/details/${id}`))
-            .catch(e => console.log(e));
+        try {
+            await cubeService.update(id, req.body);
+            res.redirect(`/details/${id}`);
+        } catch (err) {
+            console.error(err);
+            res.render('edit-cube', { error: err.message, _id: id, ...req.body });
+        }
     },
 
     getDeleteForm: async (req, res) => {

@@ -8,12 +8,15 @@ module.exports = {
         res.render('create-accessory');
     },
 
-    createAccessory: (req, res) => {
-        accessoryService.create(req.body)
-            .then(() => {
-                res.redirect('/');
-            })
-            .catch(e => console.log(e))
+    createAccessory: async (req, res) => {
+        console.log(req.route);
+        try {
+            await accessoryService.create(req.body);
+            res.redirect('/');
+        } catch (err) {
+            console.error(err);
+            res.render('create-accessory', { error: err.message, ...req.body });
+        }
     },
 
     getAttachAccessory: async (req, res) => {

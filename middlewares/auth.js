@@ -10,7 +10,7 @@ module.exports = function () {
                 // need to set user in the res.locals object in order to be used by every view !!!
                 res.locals.user = decodedToken;
             } catch (error) {
-                console.log(error);
+                console.error(error);
                 res.clearCookie(COOKIE_NAME);
             }
         }

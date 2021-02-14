@@ -11,6 +11,11 @@
 <body>
   <div class="container">
     {{> header}}
+    {{#if error}}
+    <div id="notifications">
+      <p id="notification-message">{{error}}</p>
+    </div>
+    {{/if}}
     <main>
       <h1>Edit Cube</h1>
       <div class="form">

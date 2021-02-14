@@ -11,14 +11,16 @@
 <body>
   <div class="container">
     {{> header}}
+
+    {{#if error}}
+    <div id="notifications">
+      <p id="notification-message">{{error}}</p>
+    </div>
+    {{/if}}
     <main>
       <h1>Login Form</h1>
       <div class="form">
         <form action='/login' method="POST">
-          {{#if error}}
-          <span class="error">{{error}}</span>
-          {{/if}}
-
           <label for="username">Username</label>
           <input type="text" id="username" name="username" value="{{username}}">
 

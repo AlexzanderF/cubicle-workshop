@@ -1,4 +1,5 @@
 const Cube = require('../models/Cube');
+const isURL = require('validator/lib/isURL');
 
 module.exports = {
     getOne: (id) => {
@@ -24,12 +25,54 @@ module.exports = {
         return Cube.find({}).lean();
     },
 
-    create: (data) => {
-        return new Cube(data).save();
+    create: ({ name, description, imageUrl, difficulty, creatorId }) => {
+        try {
+            if (name.length < 5) {
+                throw new Error('Name should be at least 5 characters long');
+            }
+            if (!/^\S[\w ]+\S$/g.test(name)) {
+                throw new Error('Name should consist only English letters, digits or whitespaces');
+            }
+
+            if (description.length < 20) {
+                throw new Error('Description should be at least 20 characters long');
+            }
+            if (!/^\S[\w ]+\S$/g.test(description)) {
+                throw new Error('Description should consist only English letters, digits or whitespaces');
+            }
+
+            return new Cube({ name, description, imageUrl, difficulty, creatorId }).save();
+        } catch (error) {
+            throw error;
+        }
     },
 
     update: (id, data) => {
-        return Cube.updateOne({ _id: id }, data);
+        try {
+            const { name, description, imageUrl } = data;
+
+            if (name.length < 5) {
+                throw new Error('Name should be at least 5 characters long');
+            }
+            if (!/^\S[\w ]+\S$/g.test(name)) {
+                throw new Error('Name should consist only English letters, digits or whitespaces');
+            }
+
+            if (description.length < 20) {
+                throw new Error('Description should be at least 20 characters long');
+            }
+            if (!/^\S[\w ]+\S$/g.test(description)) {
+                throw new Error('Description should consist only English letters, digits or whitespaces');
+            }
+
+            if (!isURL(imageUrl)) {
+                throw new Error('Invalid image URL');
+            }
+
+            return Cube.updateOne({ _id: id }, data);
+        } catch (error) {
+            throw error;
+        }
     },
 
     delete: (id) => {
