@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const uri = 'mongodb://localhost:27017/cubicle';
+const { DB_URI } = require('../config/config');
 
-mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false });
+mongoose.connect(DB_URI, { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {

@@ -15,14 +15,16 @@
       <h1>Login Form</h1>
       <div class="form">
         <form action='/login' method="POST">
-          <label for="username">Username</label>
-          <input type="text" id="username" name="username">
-
-          <label for="password">Password</label>
-          <input type="password" id="password" name="password">
           {{#if error}}
           <span class="error">{{error}}</span>
           {{/if}}
+
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" value="{{username}}">
+
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password">
+
           <input type="submit" value="Login">
         </form>
       </div>

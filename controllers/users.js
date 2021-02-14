@@ -1,4 +1,5 @@
 const userService = require('../services/userService');
+const { COOKIE_NAME } = require('../config/config');
 
 module.exports = {
     getLoginForm: (req, res) => {
@@ -12,10 +13,13 @@ module.exports = {
     loginUser: (req, res) => {
         userService.login(req.body)
             .then((token) => {
-                res.cookie('USER_AUTH', token);
+                res.cookie(COOKIE_NAME, token);
                 res.redirect('/');
             })
-            .catch(e => { res.render('login', { error: e.message }); console.log(e); });
+            .catch(e => {
+                res.render('login', { error: e.message, ...req.body });
+                console.log(e);
+            });
     },
 
     registerUser: (req, res) => {
@@ -23,11 +27,14 @@ module.exports = {
             .then(() => {
                 res.redirect('/login');
             })
-            .catch(e => { res.render('register', { error: e.message }); console.log(e); });
+            .catch(e => {
+                res.render('register', { error: e.message, ...req.body });
+                console.log(e);
+            });
     },
 
     logout: (req, res) => {
-        res.clearCookie('USER_AUTH');
+        res.clearCookie(COOKIE_NAME);
         res.redirect('/');
     }
 };
