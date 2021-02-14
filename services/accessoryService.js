@@ -1,9 +1,13 @@
 const Accessory = require('../models/Accessory');
 const Cube = require('../models/Cube');
+const trim = require('validator/lib/trim');
 
 module.exports = {
     create: async (data) => {
         try {
+            data.name = trim(data.name);
+            data.description = trim(data.description);
+            data.imageUrl = trim(data.imageUrl);
             const { name, description } = data;
 
             if (name.length < 5) {

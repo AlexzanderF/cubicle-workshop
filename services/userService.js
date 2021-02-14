@@ -1,11 +1,13 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const trim = require('validator/lib/trim');
 const { SECRET } = require('../config/config');
 
 module.exports = {
     register: async ({ username, password, repeatPassword }) => {
         try {
+            username = trim(username);
             if (!username || !password || !repeatPassword) {
                 throw new Error('Fill all input fields');
             }
@@ -39,6 +41,7 @@ module.exports = {
 
     login: async ({ username, password }) => {
         try {
+            username = trim(username);
             if (!username || !password) {
                 throw new Error('Fill all input fields');
             }

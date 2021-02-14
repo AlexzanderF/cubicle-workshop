@@ -1,5 +1,6 @@
 const Cube = require('../models/Cube');
 const isURL = require('validator/lib/isURL');
+const trim = require('validator/lib/trim');
 
 module.exports = {
     getOne: (id) => {
@@ -27,6 +28,10 @@ module.exports = {
 
     create: ({ name, description, imageUrl, difficulty, creatorId }) => {
         try {
+            name = trim(name);
+            description = trim(description);
+            imageUrl = trim(imageUrl);
+
             if (name.length < 5) {
                 throw new Error('Name should be at least 5 characters long');
             }
@@ -49,6 +54,9 @@ module.exports = {
 
     update: (id, data) => {
         try {
+            data.name = trim(data.name);
+            data.description = trim(data.description);
+            data.imageUrl = trim(data.imageUrl);
             const { name, description, imageUrl } = data;
 
             if (name.length < 5) {

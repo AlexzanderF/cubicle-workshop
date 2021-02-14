@@ -9,7 +9,6 @@ module.exports = {
     },
 
     createAccessory: async (req, res) => {
-        console.log(req.route);
         try {
             await accessoryService.create(req.body);
             res.redirect('/');
